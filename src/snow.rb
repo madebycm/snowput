@@ -21,7 +21,7 @@ class Snowput < Sinatra::Base
 		response.headers['Access-Control-Allow-Origin'] = '*'
 
 		if request.request_method == 'OPTIONS'		
-			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With'
+			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type'
 			response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE'
 			halt 200
 		end
@@ -43,15 +43,15 @@ class Snowput < Sinatra::Base
 	db = s.roll()
 
 	get '/:snow/?:sub?' do
-		"#{db.collection(params[:snow]).find().to_a.snowball}"
+		halt 200, db.collection(params[:snow]).find().to_a.snowball("GET")
 	end
 
 	post '/:snow/?:sub?' do
-		push = {
-			"test" => "jajaja"
-		}
+		push = JSON.parse(request.body.read)
 		insert = db.collection(params[:snow]).insert(push)
-		"#{insert}"
+		if !insert.nil?
+			halt 200, push.snowball
+		end
 	end
 
 	get '/' do
