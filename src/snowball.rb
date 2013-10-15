@@ -8,10 +8,10 @@ class Snowball
 	end
 end
 
-# extend
 class Array
-	def snowball
+	def snowball(method=nil)
 		jsonObj = {
+			"method" => (method==nil ? "(not provided)" : method),
 			"results" => self.length,
 			"auth" => nil,
 				"d" => self,
@@ -20,4 +20,22 @@ class Array
 		}
 		return jsonObj.to_json
 	end
+end
+
+class Hash
+	def snowball(method=nil)
+		return pack(self,method)
+	end
+end
+
+def pack(data,method=nil)
+	jsonObj = {
+		"method" => (method==nil ? "(not provided)" : method),
+		"results" => data.length,
+		"auth" => nil,
+			"d" => data,
+		"time" => Time.now,
+		"signature" => SecureRandom.uuid,
+	}
+	return jsonObj.to_json
 end
