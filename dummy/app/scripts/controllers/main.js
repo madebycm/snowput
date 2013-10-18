@@ -6,7 +6,7 @@ angular.module('dummyApp')
 
     var conf = {
       headers: {
-        "X-Snowput-Auth": "_dev_",
+        "X-Snowput-Auth": "_dev",
       }
     }
 
