@@ -21,9 +21,13 @@ class Snowput < Sinatra::Base
 		response.headers['Access-Control-Allow-Origin'] = '*'
 
 		if request.request_method == 'OPTIONS'		
-			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type'
+			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Snowput-Auth'
 			response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE'
 			halt 200
+		end
+
+		if request.env['HTTP_SNOWPUT_AUTH'] != "_dev"
+			halt 403, "AUTH_FAILED"
 		end
 
 		params = request.path.split("/")
@@ -35,7 +39,11 @@ class Snowput < Sinatra::Base
 		puts "\tCheking params..."
 		puts "\tParam 1 [" + params[1].to_s+"]"
 		puts "\tParam 2 [" + params[2].to_s+"]"
-		puts "\tReady for action.\n\n"
+
+		puts "==== Checking headers ... ===="
+		puts "\nHTTP_SNOWPUT_AUTH: " + request.env['HTTP_SNOWPUT_AUTH']
+
+		puts "\n[Ready to roll]\n\n"
 
 	end
 
