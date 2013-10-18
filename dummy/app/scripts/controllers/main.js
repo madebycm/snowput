@@ -6,7 +6,7 @@ angular.module('dummyApp')
 
     var conf = {
       headers: {
-        "Snowput-Auth": "_dev",
+        "X-Snowput-Auth": "_dev_",
       }
     }
 
@@ -20,7 +20,9 @@ angular.module('dummyApp')
 
     $http.post(url+"technologies", data, conf).success(function(d){
       $scope.snowput = json(d);
-    })
+    }).error(function(d){
+      $scope.snowput = json(d);
+    });
 
   	var json = function(input){
   		return JSON.stringify(input, null, 4);

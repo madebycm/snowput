@@ -20,18 +20,18 @@ class Snowput < Sinatra::Base
 		response.headers['Access-Control-Allow-Origin'] = '*'
 
 		if request.request_method == 'OPTIONS'		
-			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Snowput-Auth'
+			response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, X-Snowput-Auth'
 			response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE'
 			halt 200
 		end
 
-		if request.env['HTTP_SNOWPUT_AUTH'] != "_dev"
-			halt 200, [].snowball(nil,
-				"INVALID_HTTP_SNOWPUTH_AUTH"
+		if request.env['HTTP_X_SNOWPUT_AUTH'] != "_dev"
+			halt 403, [].snowball(nil,
+				"INVALID_HTTP_X_SNOWPUTH_AUTH"
 			)
 		end
 
-		s = Snowball.new(request.env['HTTP_SNOWPUT_AUTH'])
+		s = Snowball.new(request.env['HTTP_X_SNOWPUT_AUTH'])
 		@db = s.roll()
 
 		params = request.path.split("/")
