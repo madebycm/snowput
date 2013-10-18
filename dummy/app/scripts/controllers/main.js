@@ -2,7 +2,7 @@
 
 angular.module('dummyApp')
   .controller('MainCtrl', function ($scope, $http) {
-  	var url = "http://localhost:4567/";
+    var url = "http://localhost:4567/";
 
     var conf = {
       headers: {
@@ -24,8 +24,8 @@ angular.module('dummyApp')
       $scope.snowput = json(d);
     });
 
-  	var json = function(input){
-  		return JSON.stringify(input, null, 4);
-  	}
+    var json = function(input){
+      return JSON.stringify(input, null, 4);
+    }
 
   });
