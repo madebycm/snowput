@@ -8,7 +8,7 @@ class Operations < Snowput
 		push = JSON.parse(request.body.read)
 		insert = @db.collection(params[:snow]).insert(push)
 		if !insert.nil?
-			halt 200, push.snowball("POST")
+			halt 200, push.snowball(@method)
 		end
 	end
 
