@@ -11,7 +11,6 @@ load 'snowball.rb'
 class Snowput < Sinatra::Base
 
 	configure do
-
 		register Sinatra::Reloader
 		also_reload 'snowball.rb'
 	end
@@ -27,8 +26,13 @@ class Snowput < Sinatra::Base
 		end
 
 		if request.env['HTTP_SNOWPUT_AUTH'] != "_dev"
-			halt 403, "AUTH_FAILED"
+			halt 200, [].snowball(nil,
+				"INVALID_HTTP_SNOWPUTH_AUTH"
+			)
 		end
+
+		s = Snowball.new(request.env['HTTP_SNOWPUT_AUTH'])
+		@db = s.roll()
 
 		params = request.path.split("/")
 		# params[1]
@@ -47,16 +51,13 @@ class Snowput < Sinatra::Base
 
 	end
 
-	s = Snowball.new
-	db = s.roll()
-
 	get '/:snow/?:sub?' do
-		halt 200, db.collection(params[:snow]).find().to_a.snowball("GET")
+		halt 200, @db.collection(params[:snow]).find().to_a.snowball("GET")
 	end
 
 	post '/:snow/?:sub?' do
 		push = JSON.parse(request.body.read)
-		insert = db.collection(params[:snow]).insert(push)
+		insert = @db.collection(params[:snow]).insert(push)
 		if !insert.nil?
 			halt 200, push.snowball("POST")
 		end
