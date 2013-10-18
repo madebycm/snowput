@@ -15,19 +15,18 @@ class Snowput < Sinatra::Base
 			halt 200
 		end
 
-		unless request.env['HTTP_X_SNOWPUT_AUTH'] == "_dev"
-			halt 403, [].snowball(nil,
+		snowput_auth = request.env['HTTP_X_SNOWPUT_AUTH']
+
+		params = request.path.split("/")
+		method = request.request_method
+
+		unless snowput_auth == "_dev"
+			halt 403, [].snowball(method,
 				"INVALID_HTTP_X_SNOWPUT_AUTH"
 			)
 		end
 
-		snowput_auth = request.env['HTTP_X_SNOWPUT_AUTH']
-
-		s = Snowball.new(snowput_auth)
-		@db = s.roll()
-
-		params = request.path.split("/")
-		method = request.request_method
+		@db = Snowball.new(snowput_auth).roll()
 
 		puts "\tTaking in a " + method
 		puts "\tCheking params..."
