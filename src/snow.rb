@@ -25,13 +25,15 @@ class Snowput < Sinatra::Base
 			halt 200
 		end
 
-		if request.env['HTTP_X_SNOWPUT_AUTH'] != "_dev"
+		unless request.env['HTTP_X_SNOWPUT_AUTH'] == "_dev"
 			halt 403, [].snowball(nil,
-				"INVALID_HTTP_X_SNOWPUTH_AUTH"
+				"INVALID_HTTP_X_SNOWPUT_AUTH"
 			)
 		end
 
-		s = Snowball.new(request.env['HTTP_X_SNOWPUT_AUTH'])
+		snowput_auth = request.env['HTTP_X_SNOWPUT_AUTH']
+
+		s = Snowball.new(snowput_auth)
 		@db = s.roll()
 
 		params = request.path.split("/")
@@ -45,7 +47,7 @@ class Snowput < Sinatra::Base
 		puts "\tParam 2 [" + params[2].to_s+"]"
 
 		puts "==== Checking headers ... ===="
-		puts "\nHTTP_SNOWPUT_AUTH: " + request.env['HTTP_SNOWPUT_AUTH']
+		puts "\nHTTP_SNOWPUT_AUTH: " + snowput_auth.to_s
 
 		puts "\n[Ready to roll]\n\n"
 
