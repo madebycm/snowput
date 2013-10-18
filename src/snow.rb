@@ -58,7 +58,7 @@ class Snowput < Sinatra::Base
 		push = JSON.parse(request.body.read)
 		insert = db.collection(params[:snow]).insert(push)
 		if !insert.nil?
-			halt 200, push.snowball
+			halt 200, push.snowball("POST")
 		end
 	end
 
